@@ -10,7 +10,6 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install -r res/requirements.txt
 
-
 # Make a user and grant them sudo privileges so we can install the OpenCV dependencies
 RUN apt-get update && \
     apt-get -y install sudo
@@ -23,7 +22,7 @@ USER docker
 
 RUN sudo apt-get -y install libglib2.0-0 libsm6 libxrender1 libxext6
 
-# Remove sudo privileges since we won' need them anymore
+# Remove sudo privileges since we won't need them anymore
 RUN sudo deluser docker sudo
 
 # Make port 8080 available to the world outside this container
