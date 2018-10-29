@@ -28,11 +28,19 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - "80:80"
+      - "8080:80"
+    volumes:
+      - 'webapp_data:/webapp'
     environment:
       - KAFKA_CLIENT_ADDRESS=kafka:9092
+    networks:
+      - webnet
 volumes:
   zookeeper_data:
     driver: local
   kafka_data:
     driver: local
+  webapp_data:
+    driver: local
+networks:
+  webnet:
