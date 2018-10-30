@@ -3,10 +3,14 @@ import cv2
 import os
 from kafka import KafkaProducer
 
+KAFKA_IP=os.environ['KAFKA_CLIENT_ADDRESS']
 # Connecting to Kafka and assigning a topic
-KAFKA_VERSION=(0,10)
-producer = KafkaProducer(bootstrap_servers=os.environ['KAFKA_CLIENT_ADDRESS'], api_version=KAFKA_VERSION)
-topic = 'video'
+while KafkaProducer(bootstrap_server=KAFKA_IP) = false:
+    print('Kafka is unavailable, trying again...')
+    time.sleep(2)
+else:
+    producer = KafkaProducer(bootstrap_servers=KAFKA_IP)
+    topic = 'video'
 
 # Reading and emitting the video to the broker
 def video_emitter(video):
@@ -36,6 +40,8 @@ def video_emitter(video):
 
 if __name__ == '__main__':
     try:
-        video_emitter('video.mp4')
+        # emit video 5 times
+        for x in range(5):
+            video_emitter('video.mp4')
     finally:
         producer.close()
