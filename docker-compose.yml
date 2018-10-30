@@ -8,17 +8,26 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
       - 'zookeeper_data:/bitnami'
+    networks:
+      - kafka
   kafka:
     image: 'bitnami/kafka:latest'
+    depends_on:
+      - zookeeper
     ports:
       - '9092:9092'
     volumes:
       - 'kafka_data:/bitnami'
     environment:
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ZOOKEEPER_CONNECT=localhost:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
+    networks:
+      - kafka
   webapp:
     image: gkin/kafka-streaming:latest
+    depends_on:
+      - zookeeper
+      - kafka
     deploy:
       replicas: 5
       resources:
@@ -32,9 +41,10 @@ services:
     volumes:
       - 'webapp_data:/webapp'
     environment:
-      - KAFKA_CLIENT_ADDRESS=kafka:9092
+      - KAFKA_CLIENT_ADDRESS=localhost:9092
     networks:
       - webnet
+      - kafka
 volumes:
   zookeeper_data:
     driver: local
@@ -44,3 +54,4 @@ volumes:
     driver: local
 networks:
   webnet:
+  kafka:

@@ -32,5 +32,4 @@ EXPOSE 8080
 ENV KAFKA_CLIENT_ADDRESS='localhost:9092'
 
 # Run consumer.py and producer.py in parallel when the container launches
-#CMD res/parallel_commands.sh "python res/producer.py" "python consumer.py"
-CMD python res/producer.py && python res/consumer.py
+CMD res/parallel_commands.sh "python res/producer.py" "python consumer.py"
