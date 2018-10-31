@@ -5,12 +5,17 @@ from kafka import KafkaProducer
 
 KAFKA_IP=os.environ['KAFKA_CLIENT_ADDRESS']
 # Connecting to Kafka and assigning a topic
-while KafkaProducer(bootstrap_server=KAFKA_IP) = false:
-    print('Kafka is unavailable, trying again...')
-    time.sleep(2)
-else:
-    producer = KafkaProducer(bootstrap_servers=KAFKA_IP)
-    topic = 'video'
+checkKafka = True
+print('Checking Kafka connection')
+while checkKafka:
+    print('producer')
+    try:
+        producer = KafkaProducer(bootstrap_server=KAFKA_IP)
+        topic = 'video'
+        checkKafka = False # If we don't get an exception, then Kafka is available
+    except:
+        print('Kafka is unavailable, trying again...')
+        time.sleep(2)
 
 # Reading and emitting the video to the broker
 def video_emitter(video):

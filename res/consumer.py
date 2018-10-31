@@ -5,12 +5,17 @@ from kafka import KafkaConsumer
 
 KAFKA_IP = os.environ['KAFKA_CLIENT_ADDRESS']
 # Connect to Kafka, asking for the topic we want to consume
-while KafkaConsumer(bootstrap_servers=KAFKA_IP) = false:
-    print('Kafka is unavailable, trying again...')
-    time.sleep(2)
-else:
-    consumer = KafkaConsumer('video', bootstrap_servers=KAFKA_IP, api_version=KAFKA_VERSION, auto_offset_reset='earliest')
-    app = Flask(__name__)
+checkKafka = True
+print('Checking Kafka connection')
+while checkKafka:
+    print('consumer')
+    try:
+        consumer = KafkaConsumer('video', bootstrap_servers=KAFKA_IP, auto_offset_reset='earliest')
+        app = Flask(__name__)
+        checkKafka = False # If we don't get an exception, then Kafka is available
+    except:
+        print('Kafka is unavailable, trying again...')
+        time.sleep(2)
 
 @app.route('/', methods=['GET'])
 def index():
