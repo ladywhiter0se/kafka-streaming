@@ -1,7 +1,5 @@
 #!/bin/bash
 
-sleep 20s;
-
 for cmd in "$@"; do {
     echo "Process \"$cmd\" started";
     $cmd & pid=$!

@@ -6,9 +6,8 @@ from kafka import KafkaConsumer
 KAFKA_IP = os.environ['KAFKA_CLIENT_ADDRESS']
 # Connect to Kafka, asking for the topic we want to consume
 checkKafka = True
-print('Checking Kafka connection')
 while checkKafka:
-    print('consumer')
+    print('Consumer checking: ' + KAFKA_IP)
     try:
         consumer = KafkaConsumer('video', bootstrap_servers=KAFKA_IP, auto_offset_reset='earliest')
         app = Flask(__name__)

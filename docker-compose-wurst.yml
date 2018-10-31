@@ -5,13 +5,16 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - kafkanet
   kafka:
     image: wurstmeister/kafka:latest
     ports:
-      - target: 9094
-        published: 9094
-        protocol: tcp
-        mode: host
+      - "9094:9094"
+#      - target: 9094
+#        published: 9094
+#        protocol: tcp
+#        mode: host
     environment:
       HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -21,6 +24,8 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - kafkanet
   webapp:
     image: gkin/kafka-streaming:latest
     depends_on:
@@ -37,8 +42,10 @@ services:
     ports:
       - "8080:80"
     environment:
-      - KAFKA_CLIENT_ADDRESS=127.0.0.1:9092
+      KAFKA_CLIENT_ADDRESS: 127.0.0.1:9094
     networks:
       - webnet
+      - kafkanet
 networks:
   webnet:
+  kafkanet:

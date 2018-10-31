@@ -6,9 +6,8 @@ from kafka import KafkaProducer
 KAFKA_IP=os.environ['KAFKA_CLIENT_ADDRESS']
 # Connecting to Kafka and assigning a topic
 checkKafka = True
-print('Checking Kafka connection')
 while checkKafka:
-    print('producer')
+    print('Producer checking: ' + KAFKA_IP)
     try:
         producer = KafkaProducer(bootstrap_server=KAFKA_IP)
         topic = 'video'
