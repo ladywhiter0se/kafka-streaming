@@ -1,51 +1,55 @@
 import time
+import numpy as np
 import cv2
 import os
 from kafka import KafkaProducer
 
-KAFKA_IP=os.environ['KAFKA_CLIENT_ADDRESS']
 # Connecting to Kafka and assigning a topic
+KAFKA_IP = os.environ['KAFKA_CLIENT_ADDRESS']
 checkKafka = True
+print('Producer checking: ' + KAFKA_IP)
 while checkKafka:
-    print('Producer checking: ' + KAFKA_IP)
     try:
-        producer = KafkaProducer(bootstrap_server=KAFKA_IP)
+        producer = KafkaProducer(bootstrap_servers=KAFKA_IP)
         topic = 'video'
         checkKafka = False # If we don't get an exception, then Kafka is available
     except:
-        print('Kafka is unavailable, trying again...')
         time.sleep(2)
 
+#print(cv2.getBuildInformation())
 # Reading and emitting the video to the broker
-def video_emitter(video):
-    video = cv2.VideoCapture(video)
-    print('emitting.....')
+def video_emitter(videoFile):
+    try:
+        if os.path.isfile(videoFile):
+            print('file exists')
+        video = cv2.VideoCapture(videoFile)
+        print('emitting video')
 
-    if video.isOpened:
-        while (video.isOpened):
+        if video.isOpened():
+            print('video has been opened')
+
+        while (video.isOpened()):
             success, image = video.read()
 
             if not success:
-                print('bad read...')
+                print('bad read')
+                print(success, image)
                 break
             else:
-                ret, jpeg = cv2.imencode('.jpg', image)
-                if ret:
-                    producer.send_messages(topic, jpeg.tobytes())
+                success, jpeg = cv2.imencode('.jpg', image)
+                if success:
+                    producer.send(topic, jpeg.tobytes())
                     time.sleep(0.2) # Reduce CPU usage
                 else:
                     print('not converted...')
                     break
-    else:
-        print('video not opened...')
+        else:
+            print('video not opened')
 
-    video.release()
-    print('done emitting')
-
-if __name__ == '__main__':
-    try:
-        # emit video 5 times
-        for x in range(5):
-            video_emitter('video.mp4')
     finally:
         producer.close()
+        video.release()
+        print('done emitting')
+
+if __name__ == '__main__':
+    video_emitter('/app/res/video.avi')

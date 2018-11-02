@@ -1,5 +1,4 @@
 Flask
 Redis
 kafka-python
-opencv-python
-pygame
+numpy
